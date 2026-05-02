@@ -1,0 +1,18 @@
+# Ignore node_modules and typical OS files (even though this is static site)
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Ignore large media files if you prefer
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.mov
+*.mp4
+
+# VS Code settings
+.vscode/
+
+# Git credentials
+.env
