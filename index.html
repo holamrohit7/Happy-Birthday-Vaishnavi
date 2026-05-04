@@ -482,7 +482,12 @@ html, body {
   font-style: italic; text-align: center;
   text-shadow: 0 3px 10px rgba(0,0,0,0.55);
 }
-/* .slide-era removed — era badge hidden by design */
+.slide-era {
+  position:absolute; top:.55rem; left:.55rem;
+  background:var(--pink); color:#fff;
+  font-size:.58rem; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; padding:.2rem .55rem; border-radius:20px;
+}
 
 .slider-controls {
   display:flex; align-items:center;
@@ -1195,11 +1200,16 @@ function buildSlider() {
     img.onerror = function() {
       this.parentNode.innerHTML =
         `<div class="slide-ph"><span class="ph-ico">🖼️</span><span class="ph-lbl">${sl.src}</span></div>` +
-        (sl.caption ? `<div class="slide-cap">${sl.caption}</div>` : '');
+        (sl.caption ? `<div class="slide-cap">${sl.caption}</div>` : '') +
+        (sl.era     ? `<div class="slide-era">${sl.era}</div>` : '');
     };
     div.appendChild(img);
 
-    // era badge removed — no top-left label
+    if (sl.era) {
+      const e = document.createElement('div');
+      e.className = 'slide-era'; e.textContent = sl.era;
+      div.appendChild(e);
+    }
     if (sl.caption) {
       const c = document.createElement('div');
       c.className = 'slide-cap'; c.textContent = sl.caption;
