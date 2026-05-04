@@ -1197,12 +1197,43 @@ function buildSlider() {
     const img = document.createElement('img');
     img.src = sl.src;
     img.alt = sl.caption || '';
-    img.onerror = function() {
-      this.parentNode.innerHTML =
-        `<div class="slide-ph"><span class="ph-ico">🖼️</span><span class="ph-lbl">${sl.src}</span></div>` +
-        (sl.caption ? `<div class="slide-cap">${sl.caption}</div>` : '') +
-        (sl.era     ? `<div class="slide-era">${sl.era}</div>` : '');
+    img.dataset.idx = idx;
+
+    img.onload = function() {
+      console.log(`slide ${idx} loaded: ${sl.src}`);
+      if (location.search.includes('debug=1')) {
+        const ok = document.createElement('div');
+        ok.className = 'slide-debug-ok';
+        ok.textContent = 'loaded';
+        ok.style.position = 'absolute'; ok.style.top = '.4rem'; ok.style.right = '.4rem';
+        ok.style.background = 'rgba(0,0,0,.6)'; ok.style.color = '#fff'; ok.style.padding = '2px 6px'; ok.style.borderRadius = '6px';
+        ok.style.fontSize = '.7rem';
+        div.appendChild(ok);
+      }
     };
+
+    img.onerror = function() {
+      console.warn(`slide ${idx} failed to load: ${sl.src}`);
+      this.style.display = 'none';
+      const ph = document.createElement('div');
+      ph.className = 'slide-ph';
+      ph.innerHTML = `<span class="ph-ico">🖼️</span><span class="ph-lbl">${sl.src}</span>`;
+      div.appendChild(ph);
+      if (sl.caption) {
+        const cap = document.createElement('div');
+        cap.className = 'slide-cap'; cap.textContent = sl.caption; div.appendChild(cap);
+      }
+      if (location.search.includes('debug=1')) {
+        const err = document.createElement('div');
+        err.className = 'slide-debug-err';
+        err.textContent = 'ERROR';
+        err.style.position = 'absolute'; err.style.top = '.4rem'; err.style.left = '.4rem';
+        err.style.background = 'rgba(255,0,0,.7)'; err.style.color = '#fff'; err.style.padding = '2px 6px'; err.style.borderRadius = '6px';
+        err.style.fontSize = '.7rem';
+        div.appendChild(err);
+      }
+    };
+
     div.appendChild(img);
 
     if (sl.era) {
